@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50/50 text-slate-900 selection:bg-green-500/20 selection:text-green-800;
+  }
+}
+
+/* Animations custom classes */
+.animate-fade-in {
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-panel-dark {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* --- PRINT RULES --- */
+@media print {
+  /* Hide all browser components: margins, headers, footers */
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+  
+  html, body {
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Hide absolutely everything except the print-only container */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Target specifically the print area container and its children */
+  #print-area,
+  #print-area * {
+    visibility: visible;
+  }
+
+  /* Position the print card at the top-left of the physical page */
+  #print-area {
+    position: absolute;
+    left: 20mm;
+    top: 20mm;
+    width: 86mm !important;
+    height: 54mm !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 4mm !important;
+    background-color: #ffffff !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Specific sizing and styling fixes for nested elements when printing */
+  .print-card-bg {
+    background-color: #166534 !important; /* Force green-800 */
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .print-card-header {
+    background-color: #15803d !important; /* Force green-700 */
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .print-text-white {
+    color: #ffffff !important;
+  }
+  
+  .print-text-dark {
+    color: #0f172a !important;
+  }
+
+  .print-text-green {
+    color: #16a34a !important;
+  }
+
+  .print-border-green {
+    border-color: #22c55e !important;
+  }
+
+  /* Ensure photos render correctly */
+  img {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

@@ -4,8 +4,24 @@
 
 @layer base {
   body {
-    @apply bg-slate-50/50 text-slate-900 selection:bg-green-500/20 selection:text-green-800;
+    @apply bg-slate-50 text-slate-900 selection:bg-green-500/20 selection:text-green-800 antialiased;
   }
+}
+
+/* Custom premium scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #15803d;
 }
 
 /* Animations custom classes */
@@ -71,7 +87,7 @@
     border: none !important;
     box-shadow: none !important;
     border-radius: 4mm !important;
-    background-color: #ffffff !important;
+    background: #0f3e21 !important; /* Force deep green */
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     box-sizing: border-box !important;
@@ -79,13 +95,13 @@
 
   /* Specific sizing and styling fixes for nested elements when printing */
   .print-card-bg {
-    background-color: #166534 !important; /* Force green-800 */
+    background: #0f3e21 !important; /* Force deep green */
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
   .print-card-header {
-    background-color: #15803d !important; /* Force green-700 */
+    background-color: #14532d !important; /* Force green-900 */
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -99,7 +115,7 @@
   }
 
   .print-text-green {
-    color: #16a34a !important;
+    color: #22c55e !important;
   }
 
   .print-border-green {

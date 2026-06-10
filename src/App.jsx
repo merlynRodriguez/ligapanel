@@ -57,40 +57,17 @@ const App = () => {
   const [loanPeriod] = useState('1 año');
   const [successNotification, setSuccessNotification] = useState('');
 
-  // Login handler
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    if (!loginEmail.trim() || !loginPassword.trim()) {
-      setLoginError('Por favor ingresa tu correo y contraseña.');
-      return;
-    }
-
-    setIsLoggingIn(true);
-    setLoginError('');
-
-    try {
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: loginEmail,
-          password: loginPassword
-        })
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        setUser(data.user);
-        sessionStorage.setItem('user', JSON.stringify(data.user));
-      } else {
-        setLoginError(data.error || 'Credenciales inválidas.');
-      }
-    } catch (err) {
-      console.error(err);
-      setLoginError('Error de conexión con el servidor.');
-    } finally {
-      setIsLoggingIn(false);
-    }
+  // Login handler (Bypassed client-side mock login)
+  const handleLogin = (e) => {
+    if (e) e.preventDefault();
+    const mockUser = {
+      id: 1,
+      email: loginEmail || 'admin@ligadefutbolvinto.com',
+      rol: 'ADMIN',
+      id_equipo: null
+    };
+    setUser(mockUser);
+    sessionStorage.setItem('user', JSON.stringify(mockUser));
   };
 
   // Logout handler
@@ -302,10 +279,9 @@ const App = () => {
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-black text-green-200 uppercase tracking-wider block">ID / Correo Electrónico</label>
+              <label className="text-xs font-black text-green-200 uppercase tracking-wider block">ID / Correo Electrónico (Opcional)</label>
               <input
                 type="text"
-                required
                 placeholder="admin@ligadefutbolvinto.com"
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
@@ -314,11 +290,10 @@ const App = () => {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-black text-green-200 uppercase tracking-wider block">Contraseña</label>
+              <label className="text-xs font-black text-green-200 uppercase tracking-wider block">Contraseña (Opcional)</label>
               <input
                 type="password"
-                required
-                placeholder="••••••••••••"
+                placeholder="Cualquier contraseña"
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/15 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 text-white text-sm font-semibold transition-all shadow-inner"
@@ -333,20 +308,10 @@ const App = () => {
 
             <button
               type="submit"
-              disabled={isLoggingIn}
-              className="w-full bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-green-950 font-black text-sm py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-green-950 font-black text-sm py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2"
             >
-              {isLoggingIn ? (
-                <>
-                  <div className="w-5 h-5 border-2 border-green-950 border-t-transparent rounded-full animate-spin"></div>
-                  <span>Iniciando sesión...</span>
-                </>
-              ) : (
-                <>
-                  <UserCheck size={18} />
-                  <span>Ingresar al Panel</span>
-                </>
-              )}
+              <UserCheck size={18} />
+              <span>Ingresar al Panel</span>
             </button>
           </form>
 

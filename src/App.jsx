@@ -304,9 +304,9 @@ const App = () => {
             <div className="space-y-1.5">
               <label className="text-xs font-black text-green-200 uppercase tracking-wider block">ID / Correo Electrónico</label>
               <input
-                type="email"
+                type="text"
                 required
-                placeholder="ejemplo@liga.com"
+                placeholder="admin@ligadefutbolvinto.com"
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/15 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 text-white text-sm font-semibold transition-all shadow-inner"

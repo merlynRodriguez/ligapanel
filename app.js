@@ -232,8 +232,12 @@ app.post('/api/login', async (req, res) => {
   }
 
   try {
+    let normalizedEmail = email.trim().toLowerCase();
+    if (normalizedEmail === 'admin.ligadefutbolvinto.com') {
+      normalizedEmail = 'admin@ligadefutbolvinto.com';
+    }
     const query = 'SELECT id_usuario, email, password_hash, rol, id_equipo FROM usuarios WHERE email = $1';
-    const result = await pool.query(query, [email.trim().toLowerCase()]);
+    const result = await pool.query(query, [normalizedEmail]);
 
     if (result.rows.length === 0) {
       return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });

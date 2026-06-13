@@ -13,6 +13,9 @@ app.use(express.json());
 const { Pool } = pg;
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+  ssl: process.env.DATABASE_URL && process.env.DATABASE_URL.includes('neon.tech') ? {
+    rejectUnauthorized: false
+  } : undefined
 });
 
 // Test DB Connection
@@ -26,8 +29,10 @@ pool.query('SELECT NOW()', (err, res) => {
 
 const REFERENCE_YEAR = 2023;
 
+const apiRouter = express.Router();
+
 // Search players
-app.get('/api/jugadores', async (req, res) => {
+apiRouter.get('/jugadores', async (req, res) => {
   const term = req.query.search;
   if (!term) return res.json([]);
 
@@ -87,10 +92,10 @@ app.get('/api/jugadores', async (req, res) => {
 });
 
 // Get all players and history (excluding photos for fast loading) for local device caching
-app.get('/api/jugadores/todos', async (req, res) => {
+apiRouter.get('/jugadores/todos', async (req, res) => {
   try {
     const playersQuery = `
-      SELECT j.cedula as id, j.nombre, j.apellido, j.fecha_nacimiento,
+      SELECT j.cedula as id, j.nombre, j.apellido, j.fecha_nacimiento, j.foto_url,
              e.nombre_equipo as "equipoActual"
       FROM jugadores j
       LEFT JOIN historial_inscripciones h ON h.cedula_jugador = j.cedula AND h.anio = $1
@@ -132,6 +137,7 @@ app.get('/api/jugadores/todos', async (req, res) => {
         nombre: `${row.nombre} ${row.apellido}`.trim(),
         equipoActual: row.equipoActual || 'Sin Club',
         fechaNacimiento: birthdateFormatted,
+        foto: row.foto_url,
         historial: historyMap[row.id] || []
       };
     });
@@ -144,7 +150,7 @@ app.get('/api/jugadores/todos', async (req, res) => {
 });
 
 // Get all clubs
-app.get('/api/equipos', async (req, res) => {
+apiRouter.get('/equipos', async (req, res) => {
   try {
     const resDb = await pool.query('SELECT nombre_equipo as nombre FROM equipos ORDER BY nombre_equipo');
     
@@ -179,7 +185,7 @@ app.get('/api/equipos', async (req, res) => {
 });
 
 // Perform transfer
-app.post('/api/traspaso', async (req, res) => {
+apiRouter.post('/traspaso', async (req, res) => {
   const { cedula, targetTeamName, actionType, loanPeriod } = req.body;
   if (!cedula || !targetTeamName || !actionType) {
     return res.status(400).json({ error: 'Missing required parameters' });
@@ -225,7 +231,7 @@ app.post('/api/traspaso', async (req, res) => {
 });
 
 // Login endpoint
-app.post('/api/login', async (req, res) => {
+apiRouter.post('/login', async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(400).json({ error: 'Faltan credenciales' });
@@ -262,5 +268,9 @@ app.post('/api/login', async (req, res) => {
     res.status(500).json({ error: 'Error en el servidor al autenticar' });
   }
 });
+
+// Mount the apiRouter under both /api and / to support Netlify serverless execution
+app.use('/api', apiRouter);
+app.use('/', apiRouter);
 
 export default app;

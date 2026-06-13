@@ -106,10 +106,9 @@ const App = () => {
     // Search locally in cached jugadoresLocales
     const found = jugadoresLocales.find(j => j.id === query);
     if (found) {
-      // Photo is loaded/downloaded only when player is searched/selected
       setSelectedUserPlayer({
         ...found,
-        foto: `https://res.cloudinary.com/dp4r9jmos/image/upload/v1781042307/${found.id}`
+        foto: found.foto || `https://api.dicebear.com/7.x/initials/svg?seed=${found.nombre}`
       });
       setUserSearchError('');
       setActionType(null);
@@ -124,7 +123,7 @@ const App = () => {
       if (matches.length > 0) {
         setSelectedUserPlayer({
           ...matches[0],
-          foto: `https://res.cloudinary.com/dp4r9jmos/image/upload/v1781042307/${matches[0].id}`
+          foto: matches[0].foto || `https://api.dicebear.com/7.x/initials/svg?seed=${matches[0].nombre}`
         });
         setUserSearchError('');
         setActionType(null);
@@ -146,7 +145,7 @@ const App = () => {
     if (found) {
       setSelectedCarnetPlayer({
         ...found,
-        foto: `https://res.cloudinary.com/dp4r9jmos/image/upload/v1781042307/${found.id}`
+        foto: found.foto || `https://api.dicebear.com/7.x/initials/svg?seed=${found.nombre}`
       });
       setCarnetSearchError('');
     } else {
@@ -159,7 +158,7 @@ const App = () => {
       if (matches.length > 0) {
         setSelectedCarnetPlayer({
           ...matches[0],
-          foto: `https://res.cloudinary.com/dp4r9jmos/image/upload/v1781042307/${matches[0].id}`
+          foto: matches[0].foto || `https://api.dicebear.com/7.x/initials/svg?seed=${matches[0].nombre}`
         });
         setCarnetSearchError('');
       } else {
@@ -197,7 +196,7 @@ const App = () => {
         if (updatedPlayer) {
           const playerWithFoto = {
             ...updatedPlayer,
-            foto: `https://res.cloudinary.com/dp4r9jmos/image/upload/v1781042307/${updatedPlayer.id}`
+            foto: updatedPlayer.foto || `https://api.dicebear.com/7.x/initials/svg?seed=${updatedPlayer.nombre}`
           };
           setSelectedUserPlayer(playerWithFoto);
           
